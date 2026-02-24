@@ -8,19 +8,33 @@ A set of scripts that generates a statistics txt file and a pdf of a single part
    ```
    _Note the fonts are recommended but not required_
 2. Update the appropriate pixelsizes.txt file with your pixel size information.
-3. Update EPU_stats to include your microscope information. First, change
-   ```python
-   MICROSCOPE_INFO = {
-      "TUNDRA-XXX": ("DFCI Tundra", 1.6),
-      "TITANXXX": ("HMS Krios2", 2.7),
-      "TITANXXX": ("HMS Krios1", 2.7),
-   }
-   ```
-   to contain your serial number in the XXX spot and the correct spherical aberration in mm for your microscope. Then, if you will be using this script with a Tundra, modify the instances of
-   ```python
-   if instrument_model == "TUNDRA-XXX":
-   ```
-   to contain your serial number in the XXX spot. Note that the Tundra has a hyphen after it whereas the Titan does not. 
+3. Update EPU_stats to include your microscope information.
+
+      - First, change
+      ```python
+      MICROSCOPE_INFO = {
+         "TUNDRA-XXX": ("DFCI Tundra", 1.6),
+         "TITANXXX": ("HMS Krios2", 2.7),
+         "TITANXXX": ("HMS Krios1", 2.7),
+      }
+      ```
+      to contain your serial number in the XXX spot and the correct spherical aberration in mm for your microscope. Note that the Tundra has a hyphen after it whereas the Titan does not. 
+
+      - Next, if you will be using this script with a Tundra, modify the instances of
+      ```python
+      if instrument_model == "TUNDRA-XXX":
+      ```
+      to contain your serial number in the XXX spot. 
+
+      - Lastly, depending on your image format, you may have to modify this snippet to change the extension:
+      ```python
+      if instrument_model == "TUNDRA-XXX":
+         fractions_ext = "mrc"
+         pattern = "*Fractions.mrc"
+      else:
+         fractions_ext = "tiff"
+         pattern = "*Fractions.tiff"
+      ```        
 
 # Running the Script
 

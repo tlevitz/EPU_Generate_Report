@@ -20,7 +20,7 @@ A set of scripts that generates a statistics txt file and a pdf of a single part
    ```python
    if instrument_model == "TUNDRA-XXX":
    ```
-   to contain your serial number in the XXX spot. Note that the 
+   to contain your serial number in the XXX spot. Note that the Tundra has a hyphen after it whereas the Titan does not. 
 
 # Running the Script
 

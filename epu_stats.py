@@ -405,9 +405,9 @@ def parse_micrograph_xml(file_path, pix_dict, beamsize_dict, caldate_dict):
     return values, instrument_model
 
 MICROSCOPE_INFO = {
-    "TUNDRA-9956148": ("DFCI Tundra", 1.6),
-    "TITAN52336120": ("HMS Krios2", 2.7),
-    "TITAN52337800": ("HMS Krios1", 2.7),
+    "TUNDRA-XXX": ("DFCI Tundra", 1.6),
+    "TITANXXX": ("HMS Krios2", 2.7),
+    "TITANXXX": ("HMS Krios1", 2.7),
 }
 
 def load_calibration_table(path):
@@ -789,7 +789,7 @@ def process_directory_screening(directory, pix_dict, beamsize_dict, caldate_dict
 
     df_all = pd.concat([df.reset_index(drop=True), df_xml, df_dm], axis=1)
 
-    if instrument_model == "TUNDRA-9956148":
+    if instrument_model == "TUNDRA-XXX":
         drop_cols = [c for c in df_all.columns if c.startswith("Energy Filter")]
         df_all = df_all.drop(columns=drop_cols, errors="ignore")
 
@@ -808,7 +808,7 @@ def process_directory_collection(directory, pix_dict, beamsize_dict, caldate_dic
         raise RuntimeError(f"No FoilHole XML found in Images-Disc1/*/Data for {directory}")
     _, instrument_model = parse_micrograph_xml(foil_xml, pix_dict, beamsize_dict, caldate_dict)
 
-    if instrument_model == "TUNDRA-9956148":
+    if instrument_model == "TUNDRA-XXX":
         fractions_ext = "mrc"
         pattern = "*Fractions.mrc"
     else:
@@ -865,7 +865,7 @@ def process_directory_collection(directory, pix_dict, beamsize_dict, caldate_dic
 
     df_all = pd.concat([df.reset_index(drop=True), df_xml, df_dm], axis=1)
 
-    if instrument_model == "TUNDRA-9956148":
+    if instrument_model == "TUNDRA-XXX":
         drop_cols = [c for c in df_all.columns if c.startswith("Energy Filter")]
         df_all = df_all.drop(columns=drop_cols, errors="ignore")
 
@@ -903,7 +903,7 @@ def write_table(directory, df, instrument_model, mode):
             "Defocus Values (um)",
         ]
     else:
-        if instrument_model == "TUNDRA-9956148":
+        if instrument_model == "TUNDRA-XXX":
             cols = [
                 "Date", "Folder", "Start Time", "End Time", "Total Time (hrs)",
                 "Grid Squares Collected", "Total Movies",
@@ -1003,7 +1003,7 @@ def write_table(directory, df, instrument_model, mode):
     return df_out
 
 def write_atlaspaths(directory, df, atlas_path, instrument_model):
-    if instrument_model != "TUNDRA-9956148":
+    if instrument_model != "TUNDRA-XXX":
         return
     if atlas_path is None:
         return

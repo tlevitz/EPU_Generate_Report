@@ -44,6 +44,8 @@ A set of scripts that generates a statistics txt file and a pdf of a single part
   python generate_report.py {path/to/folder} [optional: path/to/atlas]
    ```
 
+_The folder/to/query must be the full EPU-generated folder containing all metadata_
+
 Note 1: You could definitely combine integrate epustats.py into generate_report.py, it is kept separate only because of our transfer workflow
 
 Note 2: generate_report.py should be able to automatically find the atlas images if the directory is located within the screening/collection directory or the directory containing it. However you can provide the path to the directory containing the atlas images if it is located elsewhere. If there are no atlas images, the report will still generate but will skip showing atlas images. This version of the script does not find atlas images for non-Tundra data sets but could be easily modified to do so. 

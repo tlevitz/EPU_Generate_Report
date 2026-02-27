@@ -14,7 +14,7 @@ import math
 import numpy as np
 from PIL import Image, ImageDraw
 
-from epu.report_style import (
+from report_style import (
     COLOR_COLLECTION,
     COLOR_SCREENING,
     COLOR_SELECTED,
@@ -22,8 +22,8 @@ from epu.report_style import (
     FONT_SIZES,
     pil_font,
 )
-from epu.report_utils import measure_text, draw_bold_text
-from epu.report_scale_bars import add_scale_bar_by_xml
+from report_utils import measure_text, draw_bold_text
+from report_scale_bars import add_scale_bar_by_xml
 
 RESAMPLE_LANCZOS = getattr(Image, "LANCZOS", getattr(Image, "ANTIALIAS", Image.BICUBIC))
 

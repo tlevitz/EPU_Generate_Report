@@ -533,7 +533,7 @@ def draw_marker_supersampled(od, x_c, y_c, color_rgb, radius_px_global, SUPERSAM
 
 # -------- FoilHole discovery and GridSquare file pickers --------
 
-def find_unique_foilhole_xmls_earliest_latest(foilholes_dir, min_ts: datetime | None = None):
+def find_unique_foilhole_xmls_earliest_latest(foilholes_dir, min_ts=None):
     if not os.path.isdir(foilholes_dir):
         return []
     records = {}
@@ -542,12 +542,9 @@ def find_unique_foilhole_xmls_earliest_latest(foilholes_dir, min_ts: datetime | 
         if not m:
             continue
         uniq, ts_str = m.group(1), m.group(2)
-        try:
-            ts = parse_timestamp(ts_str)
-        except Exception:
-            continue
+        ts = parse_timestamp(ts_str)
 
-        # NEW: filter out template-definition FoilHoles (too early)
+        # NEW: filter out early template-definition FoilHoles
         if min_ts is not None and ts < min_ts:
             continue
 
@@ -567,8 +564,7 @@ def find_unique_foilhole_xmls_earliest_latest(foilholes_dir, min_ts: datetime | 
             if ts > rec["latest_ts"]:
                 rec["latest"] = full
                 rec["latest_ts"] = ts
-    sorted_records_list = sorted(records.items(), key=lambda item: item[1]["earliest_ts"])
-    return sorted_records_list
+    return sorted(records.items(), key=lambda item: item[1]["earliest_ts"])
 
 def find_latest_gridsquare_files(gs_dir):
     jpgs = []
@@ -756,7 +752,7 @@ def _deterministic_seed_for_grid(gs_dir, uniqs_order):
     digest = hashlib.md5(s.encode("utf-8")).hexdigest()
     return int(digest[:16], 16)
 
-def get_selected_holes_for_gridsquare(gs_dir, max_show=12, min_ts: datetime | None = None):
+def get_selected_holes_for_gridsquare(gs_dir, max_show=12):
     gs_jpg, gs_xml = locate_gs_jpg_xml(gs_dir)
     if gs_jpg is None or gs_xml is None:
         return [], {}
@@ -841,7 +837,7 @@ def append_comment_central(
     if img is None or not comment_text:
         return img
 
-#    comment_font = pil_font(FONT_SIZES["note"], italic=True)
+    comment_font = pil_font(FONT_SIZES["note"], italic=True)
 
     W, H = img.size
     tmp_draw = ImageDraw.Draw(Image.new("RGB", (10, 10)))
@@ -895,7 +891,7 @@ def add_plasmon_caption(img, caption_text: str):
 
 # -------- Main annotators --------
 
-def annotate_gridsquare_left(gs_dir, min_ts: datetime | None = None):
+def annotate_gridsquare_left(gs_dir, min_ts=None):
     """
     Build the left GridSquare panel: GS image with hole overlays and labels,
     but WITHOUT legend or comment.
@@ -996,8 +992,8 @@ def annotate_gridsquare_left(gs_dir, min_ts: datetime | None = None):
     label_font = pil_font(FONT_SIZES["caption"], bold=True)
     for x_label, y_label, label, color_rgb in labels_to_draw:
         draw_bold_text(draw_text, (x_label, y_label), label, fill=color_rgb, font=label_font)
-    base_rgba = add_scale_bar_by_xml(base_rgba, gs_xml, bar_um=10, align="left", font_size=FONT_SIZES["scale_bar"])
 
+    base_rgba = add_scale_bar_by_xml(base_rgba, gs_xml, bar_um=10, align="left", font_size=FONT_SIZES["scale_bar"])
     return base_rgba.convert("RGB")
 
 def annotate_gridsquare_right(gs_dir):
@@ -1131,7 +1127,7 @@ def compile_gridsquare_images(gs_dir, left_img, right_img):
         return append_comment_central(
             left_with_legend,
             comment_text,
-            pil_font(FONT_SIZES["note"], italic=False),
+            pil_font(FONT_SIZES["note"], italic=True),
             is_two_panel=False,
             side_margin=10,
             top_margin=6,
@@ -1161,7 +1157,7 @@ def compile_gridsquare_images(gs_dir, left_img, right_img):
     final_with_comment = append_comment_central(
         combined_with_legend,
         comment_text,
-        pil_font(FONT_SIZES["note"], italic=False),
+        pil_font(FONT_SIZES["note"], italic=True),
         is_two_panel=True,
         side_margin=10,
         top_margin=6,
@@ -1169,11 +1165,11 @@ def compile_gridsquare_images(gs_dir, left_img, right_img):
     )
     return final_with_comment
 
-def annotate_single_gridsquare_image(gs_dir, min_ts: datetime | None = None):
+def annotate_single_gridsquare_image(gs_dir, min_ts=None):
     left_gs = annotate_gridsquare_left(gs_dir, min_ts=min_ts)
     return compile_gridsquare_images(gs_dir, left_gs, right_img=None)
 
-def annotate_gridsquare_image_or_pair(gs_dir, min_ts: datetime | None = None):
+def annotate_gridsquare_image_or_pair(gs_dir, min_ts=None):
     left_gs = annotate_gridsquare_left(gs_dir, min_ts=min_ts)
-    right_gs = annotate_gridsquare_right(gs_dir)  # right panel is "collection-only"; usually fine unfiltered
+    right_gs = annotate_gridsquare_right(gs_dir)
     return compile_gridsquare_images(gs_dir, left_gs, right_gs)

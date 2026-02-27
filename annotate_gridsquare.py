@@ -752,7 +752,7 @@ def _deterministic_seed_for_grid(gs_dir, uniqs_order):
     digest = hashlib.md5(s.encode("utf-8")).hexdigest()
     return int(digest[:16], 16)
 
-def get_selected_holes_for_gridsquare(gs_dir, max_show=12):
+def get_selected_holes_for_gridsquare(gs_dir, max_show=12, min_ts=None):
     gs_jpg, gs_xml = locate_gs_jpg_xml(gs_dir)
     if gs_jpg is None or gs_xml is None:
         return [], {}
@@ -761,6 +761,7 @@ def get_selected_holes_for_gridsquare(gs_dir, max_show=12):
     base_img = Image.open(gs_jpg).convert("RGB")
     W, H = base_img.size
     dm_centers, dm_pos_map = build_dm_pos_map(gs_xml, gs_meta, W, H)
+
     foilholes_dir = os.path.join(gs_dir, "FoilHoles")
     fh_map = find_unique_foilhole_xmls_earliest_latest(foilholes_dir, min_ts=min_ts)
     data_status = scan_data_micrographs(gs_dir)

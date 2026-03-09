@@ -58,7 +58,7 @@ _These scripts are intended for use in a Linux (or WSL) environment._
 
    ```bash
   conda activate transferenv
-  python generate_report.py {path/to/EPU/directory}
+  python generate_report.py {path/to/session}
    ```
 
 Alternative commands if you need to specify nonstandard paths:
@@ -68,7 +68,7 @@ Alternative commands if you need to specify nonstandard paths:
   python3 generate_report.py /path/to/session --pixel-table /path/to/pixelsizes.txt
   python3 generate_report.py /path/to/session /optional/atlas --pixel-table /path/to/pixelsizes.txt
 ```
-_The path/to/EPU/directory must be the full EPU-generated directory containing all metadata. The atlas path must be specified if the atlas directory is not located within the EPU directory or its parent directory_
+_The path/to/session must be the full EPU-generated directory containing all metadata. The atlas path must be specified if the atlas directory is not located within the EPU directory or its parent directory_
 
 _These scripts were generated with the assistance of GPT4DFCI, a private, HIPAA-secure endpoint to GPT-4o provided by DFCI_
 

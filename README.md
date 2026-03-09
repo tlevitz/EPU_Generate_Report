@@ -1,54 +1,74 @@
 # EPU_Generate_Report
 A set of scripts that generates a statistics txt file and a pdf of a single particle EPU screening or collection session. 
 
+Note: the epu folder is identical to the epu folder in the EPU_Screening_Visualization scripts. If you are already using that and are implementing this on the same computer, you can download only generate_report.py and make a pixelsizes.txt copy and put them both in the same folder as app.py. You will need to add the rest of the dependencies into your screening_vis python environment. 
+
 # Getting Started
+_These scripts are intended for use in a Linux (or WSL) environment._
+
 1. Create a new python environment
    ```bash
    conda create --name epu_report python=3.9 numpy pandas pillow reportlab font-ttf-dejavu-sans-mono, fonts-conda-ecosystem
    ```
    _Note the fonts are recommended but not required_
-2. Update the appropriate pixelsizes.txt file with your pixel size information.
-3. Update EPU_stats to include your microscope information.
 
-      - First, change
-      ```python
-      MICROSCOPE_INFO = {
-         "TUNDRA-XXX": ("DFCI Tundra", 1.6),
-         "TITANXXX": ("HMS Krios2", 2.7),
-         "TITANXXX": ("HMS Krios1", 2.7),
-      }
-      ```
-      to contain your serial number in the XXX spot and the correct spherical aberration in mm for your microscope. Note that the Tundra has a hyphen after it whereas the Titan does not. 
+2. Modify this section of epu/epustats.py with your microscope information
 
-      - Next, if you will be using this script with a Tundra, modify the instances of
-      ```python
-      if instrument_model == "TUNDRA-XXX":
-      ```
-      to contain your serial number in the XXX spot. 
+   ```python
+   MICROSCOPE_INFO = {
+       "TUNDRA-XXX": ("DFCI Tundra", 1.6),
+       "TITANXXX": ("HMS Krios2", 2.7),
+       "TITANXXX": ("HMS Krios1", 2.7),
+   }
 
-      - Lastly, depending on your image format, you may have to modify this snippet to change the extension:
-      ```python
-      if instrument_model == "TUNDRA-XXX":
-         fractions_ext = "mrc"
-         pattern = "*Fractions.mrc"
-      else:
-         fractions_ext = "tiff"
-         pattern = "*Fractions.tiff"
-      ```        
+   windows_root = "Z:\\"
+   ```
+
+   MICROSCOPE_INFO should contain your InstrumentModel (replace XXX with the serial number) followed by the
+   spherical aberration in mm. If you do not know what to use for InstrumentModel, you can run 
+   ```bash
+   grep InstrumentModel FoilHole*.xml
+   ```
+   in a bash terminal within Images-Disc1/GridSquare*/Data/ (repalace the * after FoilHole with a single file
+   name)
+   
+   The windows_root is the root of where the atlas is stored on the original drive. If you are not sure what
+   your root is, you can run
+   ```bash
+   grep -oP 'AtlasId .{0,50}' EpuSession.dm
+   ```
+   in the terminal while standing in the base directory of an imaging session. This is only used to "clean up"
+   the atlas path displayed in the summary table.
+   
+3. The code assumes that you have a pixel size table named pixelsizes.txt located in the same directory as generate_report.py). There are two example files provided here that you can modify. You can omit the beam size column for 3-condenser systems. If you want the table to live elsewhere, or if you need multiple tables for different microscopes, you can specify the pixel-table path (see Running the Script, below).
+
+4. If your microscope writes out .tiff files, or if you have a Ceta-F that writes out .mrc files, you do
+   not need to change anything. Otherwise, you will have to modify this segment of epu/epustats.py to include
+   your file extension(s). 
+   ```python
+    if cam_name == "Ceta-F":
+        fractions_ext = "mrc"
+        pattern = "*Fractions.mrc"
+    else:
+        fractions_ext = "tiff"
+        pattern = "*Fractions.tiff"
+   ```
 
 # Running the Script
 
    ```bash
   conda activate transferenv
-  python epustats.py {/path/to/folder/to/query} {/path/to/pixelsizes.txt}
-  python generate_report.py {path/to/folder} [optional: path/to/atlas]
+  python generate_report.py {path/to/EPU/directory}
    ```
 
-_The folder/to/query must be the full EPU-generated folder containing all metadata_
-
-Note 1: You could definitely combine integrate epustats.py into generate_report.py, it is kept separate only because of our transfer workflow
-
-Note 2: generate_report.py should be able to automatically find the atlas images if the directory is located within the screening/collection directory or the directory containing it. However you can provide the path to the directory containing the atlas images if it is located elsewhere. If there are no atlas images, the report will still generate but will skip showing atlas images. This version of the script does not find atlas images for non-Tundra data sets but could be easily modified to do so. 
+Alternative commands if you need to specify nonstandard paths:
+```bash
+  python3 generate_report.py /path/to/session
+  python3 generate_report.py /path/to/session /optional/path/to/atlas_root_or_atlas
+  python3 generate_report.py /path/to/session --pixel-table /path/to/pixelsizes.txt
+  python3 generate_report.py /path/to/session /optional/atlas --pixel-table /path/to/pixelsizes.txt
+```
+_The path/to/EPU/directory must be the full EPU-generated directory containing all metadata. The atlas path must be specified if the atlas directory is not located within the EPU directory or its parent directory_
 
 _These scripts were generated with the assistance of GPT4DFCI, a private, HIPAA-secure endpoint to GPT-4o provided by DFCI_
 

@@ -82,7 +82,7 @@ _These scripts were generated with the assistance of GPT4DFCI, a private, HIPAA-
 <img width="637" height="733" alt="p3" src="https://github.com/user-attachments/assets/5cb14a6f-9698-46a2-8bf0-906ae4ed94ea" />
 
 ## txt file with screening/collection statistics:
-
+```txt
 Date                                              20260220                                              
 Folder                                            TL_20260220_110k                                      
 Start Time                                        20260220 12:20:51                                     
@@ -129,3 +129,4 @@ Notes:
     -The dose is approximated from the first movie. The total dose on specimen is slightly higher; however, if you did not record the dose when setting up collection, this will be appropriate for most (if not all) processing.
     -The hole size and spacing is guessed based on the measure hole size function in EPU. If you are using an uncommon hole size/spacing, it may misidentify it.
     -Pixel size is listed both as the pixel size automatically coded in EPU as well as the experimentally-calibrated pixel size. I advise that you use the calibrated pixel size in processing
+```

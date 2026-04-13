@@ -434,8 +434,8 @@ def parse_micrograph_xml(file_path, pix_dict, beamsize_dict, caldate_dict):
 
     # DoseOnCamera (e/pix)
     dose_on_cam = parse_custom_value(root, "DoseOnCamera")
-    dose_e_per_pix = float(dose_on_cam) if dose_on_cam is not None else None
-    values["Approx. Total Dose (e/pix)"] = round(dose_e_per_pix, 2) if dose_e_per_pix is not None else None
+    dose_e_per_pix = float(dose_on_cam) if dose_on_cam not in (None, "false") else None
+    values["Approx. Total Dose (e/pix)"] = round(dose_e_per_pix, 2) if dose_e_per_pix not in (None, "false") else None
 
     # Calibrated pixel size / beam size / cal date
     if mag_val is not None:
